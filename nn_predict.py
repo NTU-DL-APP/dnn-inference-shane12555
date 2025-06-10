@@ -2,13 +2,24 @@ import numpy as np
 import json
 
 # === Activation functions ===
+import numpy as np
+
 def relu(x):
     return np.maximum(0, x)
 
-
 def softmax(x):
-    exps = np.exp(x - np.max(x, axis=1, keepdims=True))  
-    return exps / np.sum(exps, axis=1, keepdims=True)
+    # 支援 batch 输入：x.shape = (batch_size, num_classes)
+    x = np.array(x)
+    if x.ndim == 1:
+        # 单样本
+        x = x - np.max(x)
+        e = np.exp(x)
+        return e / np.sum(e)
+    # 批量样本
+    x = x - np.max(x, axis=1, keepdims=True)
+    e = np.exp(x)
+    return e / np.sum(e, axis=1, keepdims=True)
+
 
 
 # === Flatten ===
